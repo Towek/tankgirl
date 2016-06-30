@@ -3,23 +3,33 @@ using System.Collections;
 
 public class PlayerMovment : MonoBehaviour
 {
+    //public
     public Rigidbody rb;
+    public float movementSpeed = 5.0f;
+    public float mouseSpeed = 2.0f;
+    //private
     private Vector3 movement = Vector3.zero;
-    public float speed;
-    private CharacterController controller;
+    private CharacterController cc;
+
     // Use this for initialization
     void Start()
     {
+        cc = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
-        CharacterController controller = GetComponent<CharacterController>();
-        movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-        movement *= speed;
-        controller.Move(movement * Time.deltaTime);
+        //mouse rotate
+        float mouseRotate = Input.GetAxis("Mouse X") * mouseSpeed;
+        transform.Rotate(0, mouseRotate, 0);
+
+        //movement
+        float forwardSpeed = Input.GetAxis("Vertical") * movementSpeed;
+        float sideSpeed = Input.GetAxis("Horizontal") * movementSpeed;
+
+        Vector3 speed = new Vector3(sideSpeed, 0, forwardSpeed);
+        speed = transform.rotation * speed;
+        cc.SimpleMove(speed);
     }
 }
