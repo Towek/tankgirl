@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof(CharacterController))]
 public class PlayerMovment : MonoBehaviour
 {
     //public
@@ -8,10 +9,12 @@ public class PlayerMovment : MonoBehaviour
     public float movementSpeed = 5.0f;
     public float mouseSpeed = 2.0f;
     public float mouseRange = 60.0f;
+    public float jumpHeight = 5.0f;
     //private
     private Vector3 movement = Vector3.zero;
     private CharacterController cc;
     private float mouseVertical = 0;
+    private float verticalVelocity = 0.0f;
     // Use this for initialization
     void Start()
     {
@@ -31,11 +34,18 @@ public class PlayerMovment : MonoBehaviour
         Camera.main.transform.localRotation = Quaternion.Euler(mouseVertical, 0, 0);
 
         //movement
+        verticalVelocity += Physics.gravity.y * Time.deltaTime;
         float forwardSpeed = Input.GetAxis("Vertical") * movementSpeed;
         float sideSpeed = Input.GetAxis("Horizontal") * movementSpeed;
 
-        Vector3 speed = new Vector3(sideSpeed, 0, forwardSpeed);
+        if (Input.GetButton("Jump")){
+            if (cc.isGrounded){
+                verticalVelocity = jumpHeight;
+            }
+        }
+
+        Vector3 speed = new Vector3(sideSpeed, verticalVelocity, forwardSpeed);
         speed = transform.rotation * speed;
-        cc.SimpleMove(speed);
+        cc.Move(speed * Time.deltaTime);
     }
 }
