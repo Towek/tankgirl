@@ -14,11 +14,15 @@ public class PlayerMovment : MonoBehaviour
     private CharacterController cc;
     private float mouseVertical = 0;
     private float verticalVelocity = 0.0f;
+    private GameObject Hand;
+    private Rigidbody Hrb;
     // Use this for initialization
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        Hand = GameObject.Find("Hand");
         cc = GetComponent<CharacterController>();
+        Hrb = Hand.GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -38,7 +42,11 @@ public class PlayerMovment : MonoBehaviour
         float sideSpeed = Input.GetAxis("Horizontal") * movementSpeed;
 
         if (Input.GetButton("Jump") && cc.isGrounded){
-                verticalVelocity = jumpHeight;
+            verticalVelocity = jumpHeight;
+        }
+
+        if (Input.GetButton("Fire1")){
+            Debug.Log("FIRE1 clicked");
         }
 
         Vector3 speed = new Vector3(sideSpeed, verticalVelocity, forwardSpeed);
